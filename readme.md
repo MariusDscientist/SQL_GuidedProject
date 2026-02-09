@@ -1,88 +1,96 @@
+# Guided SQL Project – PostgreSQL Fundamentals & Analysis
 
+This project is a guided learning initiative focused on using PostgreSQL for database management, including data loading and analysis through SQL functions.
 
-# SQL Guided Project – PostgreSQL Fundamentals & Analysis
-
-Este proyecto es un **proyecto guiado de aprendizaje** enfocado en el uso de **PostgreSQL** para la creación de bases de datos, carga de información y análisis mediante **funciones SQL**.
-
-El objetivo principal fue comprender el flujo completo desde la instalación del motor de base de datos hasta la ejecución de consultas y funciones para análisis de datos.
+The main objective was to understand the complete process, from installing a database engine to executing queries and functions for data analysis.
 
 ---
 
-## 🧠 ¿Qué aprendí en este proyecto?
+## What was learned in this project
 
-Durante el desarrollo de este proyecto aprendí a:
+During the development of this project, the following points were addressed:
 
-- Instalar y configurar **PostgreSQL** en entorno local
-- Crear y administrar:
-  - Usuarios
-  - Contraseñas
-  - Bases de datos
-- Utilizar **pgAdmin** como interfaz gráfica para la administración de PostgreSQL
-- Conectarme a una base de datos local desde pgAdmin
-- Insertar datos utilizando:
-  - **Query Tool** (`INSERT INTO`)
-  - Importación de archivos **CSV**
-- Diseñar y ejecutar **funciones en SQL (PL/pgSQL)** para análisis de datos
-- Realizar consultas orientadas a análisis y exploración de información
+- Installation and configuration of PostgreSQL in a local environment.
+- Creation and management of users, passwords, and databases.
+- Use of pgAdmin as a graphical interface for PostgreSQL administration.
+- Connection to a local database from pgAdmin.
+- Data insertion methods, both with the query tool (`INSERT INTO`) and by importing CSV files.
+- Design and execution of SQL functions (PL/pgSQL) for data analysis.
+- Execution of queries focused on analysis and data exploration.
 
 ---
 
-## 🛠️ Tecnologías utilizadas
+## Technologies used
 
-- **PostgreSQL**
-- **pgAdmin**
-- **SQL / PL/pgSQL**
-- **Git & GitHub**
+- PostgreSQL
+- pgAdmin
+- SQL / PL/pgSQL
+- Git & GitHub
 
 ---
 
-## 🗄️ Estructura del proyecto
+## Project structure
 
 ```text
 SQL_GuidedProject/
 ├── data/
-│   └── data.csv
+|   ├── Customers.csv
+|   ├── Sales.csv
+│   └── project-db.txt
 ├── sql/
-│   ├── create_tables.sql
-│   ├── insert_data.sql
-│   ├── functions.sql
-│   └── analysis_queries.sql
+│   └──SQL-Window-Functions-for_Analytics.sql
 ├── README.md
-````
+└── .gitignore 
+```
 
 ---
 
-## 🚀 Flujo de trabajo
+## Workflow
 
-1. Instalación de PostgreSQL en entorno local
-2. Creación de usuario y base de datos
-3. Configuración de pgAdmin y conexión al servidor local
-4. Creación de tablas mediante SQL
-5. Carga de datos:
+The development process followed these steps:
 
-   * Inserciones manuales desde Query Tool
-   * Importación desde archivos CSV
-6. Creación de funciones SQL para análisis
-7. Ejecución de consultas analíticas
-
----
-
-## 📊 Ejemplos de análisis realizados
-
-* Uso de funciones para cálculos agregados
-* Análisis de datos a partir de funciones personalizadas
-* Consultas para exploración y validación de datos
+1. Installation of PostgreSQL in a local environment.
+2. Creation of a user and a database.
+3. Configuration of pgAdmin and establishing connection with the local server.
+4. Creation of tables using SQL commands.
+5. Data loading through manual insertions from the query tool and by importing CSV files.
+6. Development of SQL functions for analysis.
+7. Execution of analytical queries.
 
 ---
 
-## 📌 Notas
+## Examples of analysis performed
 
-Este proyecto tiene un enfoque **educativo** y fue desarrollado como parte de un proceso de aprendizaje guiado en bases de datos relacionales y análisis de datos con SQL.
+Some examples of the analyzes carried out include:
+
+*   Use of functions for aggregate calculations.
+*   Data analysis based on custom functions.
+*   Queries for data exploration and validation.
+
+---
+## Errors and solutions
+
+During CSV data loading, permission errors appeared.
+This occurred because PostgreSQL reads files as a server process, not as the system user.
+
+To solve it:
+
+A dedicated import directory was created, accessible only by the postgres user.
+
+CSV files were loaded using the COPY command from the Query Tool.
+
+CSV columns were mapped in order to a normalized SQL schema.
+
+This point was especially valuable for understanding the difference between client (pgAdmin) and server (PostgreSQL).
+---
+
+## Additional notes
+
+This project has an educational purpose, being developed as part of a guided learning process in relational databases and data analysis with SQL.
 
 ---
 
-## ✍️ Autor
+## Author
 
 **Jhon Mario Cano Torres**
-Ingeniero Físico | Científico de Datos Junior
-
+Physical Engineer | Junior Data Scientist
