@@ -17,6 +17,13 @@ SELECT * FROM regions;
 SELECT * FROM customers;
 SELECT * FROM sales;
 
+
+SELECT * FROM employees;
+SELECT * FROM departments;
+SELECT * FROM regions;
+SELECT * FROM customers;
+SELECT * FROM sales;
+
 #############################
 -- Task Two: Window Functions - Refresher
 -- In this task, we will refresh our understanding
@@ -25,6 +32,10 @@ SELECT * FROM sales;
 
 -- 2.1: Retrieve a list of employee_id, first_name, hire_date, 
 -- and department of all employees ordered by the hire date
+SELECT employee_id, first_name, department, hire_date,
+ROW_NUMBER() OVER (ORDER BY hire_date) AS Row_N
+FROM employees;
+
 SELECT employee_id, first_name, department, hire_date,
 ROW_NUMBER() OVER (ORDER BY hire_date) AS Row_N
 FROM employees;
@@ -45,18 +56,29 @@ ROW_NUMBER() OVER(PARTITION BY department
 				  ORDER BY salary DESC)
 FROM employees;
 
+SELECT first_name, email, department, salary,
+ROW_NUMBER() OVER(PARTITION BY department
+				  ORDER BY salary DESC)
+FROM employees;
+
 -- 3.2: Let's use the RANK() function
 
 
 -- Exercise 3.1: Retrieve the hire_date. Return details of
 -- employees hired on or before 31st Dec, 2005 and are in
 -- First Aid, Movies and Computers departments 
-SELECT first_name, email, department, salary, ___
+SELECT first_name, email, department, salary, hire_date,
 RANK() OVER(PARTITION BY department
 			ORDER BY salary DESC)
 FROM employees
-WHERE ___ AND department ___;
+WHERE hire_date >= '2005-12-31' AND department IN ('First Aid','Movies', 'Computers');
 
+select * from employees
+WHERE department IN ('First Aid','Movies', 'Computers')
+order by hire_date;
+
+
+--
 -- This returns how many employees are in each department
 SELECT department, COUNT(*) dept_count
 FROM employees
@@ -111,11 +133,11 @@ FROM employees)
 -- 4.3: Find the average salary for each group of employees
 
 
-#############################
+--#############################
 -- Task Five: Aggregate Window Functions - Part One
 -- In this task, we will learn how to use
 -- aggregate window functions in SQL
-#############################
+--#############################
 
 -- 5.1: This returns how many employees are in each department
 SELECT department, COUNT(*) AS dept_count
@@ -136,15 +158,18 @@ ORDER BY department;
 
 -- 5.3: Total Salary for all employees
 
+SELECT SUM(salary) AS "SALARY OF ALL" FROM employees
+
 
 -- 5.4: Total Salary for each department
-
+SELECT department, SUM(salary)FROM employees
+group by department
 
 -- Exercise 5.1: Total Salary for each department and
 -- order by the hire date. Call the new column running_total
 SELECT first_name, hire_date, department, salary,
-___(___) OVER(___ ___
-				 ___ ___) AS ___
+sum(salary) OVER(PARTITION BY department
+				 ORDER BY hire_date) AS running_total
 FROM employees;
 
 #############################
@@ -164,9 +189,11 @@ FROM employees;
 -- Exercise 6.1: Retrieve the first names, department and 
 -- number of employees working in that department and in region 2
 SELECT first_name, department, 
-___ OVER(___ ___) AS dept_count
+count(first_name) OVER(partition by department order by department) AS dept_count
 FROM employees
-___ ___ = ___;
+where region_id = 2;
+
+select * from employees
 
 -- Create a common table expression to retrieve the customer_id, 
 -- ship_mode, and how many times the customer has purchased from the mall
@@ -180,7 +207,7 @@ ORDER BY purchase DESC
 -- Exercise 6.2: Calculate the cumulative sum of customers purchase
 -- for the different ship mode
 SELECT customer_id, ship_mode, purchase, 
-___(___) OVER(___ ___
+sum(purchase) OVER( partition by ship_mode
 				   ORDER BY customer_id ASC) AS sum_of_sales
 FROM purchase_count;
 
@@ -203,9 +230,19 @@ ORDER BY hire_date;
 
 
 -- 7.2: Add the current row and previous row
+SELECT first_name, hire_date,salary,
+		sum(salary) over ( order by hire_date rows between 1 preceding  and current row) as sum
+FROM employees
 
 
 -- 7.3: Find the running average
+
+SELECT 
+	first_name, hire_date, salary,
+	avg(salary) over ( order by hire_date ) as avg
+FROM employees
+
+	
 
 
 -- What do you think the result of the query will be?
@@ -227,7 +264,12 @@ FIRST_VALUE(department) OVER(ORDER BY department ASC) first_department
 FROM departments;
 
 -- 8.2: Retrieve the last department in the departments table
-
+SELECT department, division,
+LAST_VALUE(department) OVER(ORDER BY department ASC
+			RANGE BETWEEN
+            UNBOUNDED PRECEDING AND
+            UNBOUNDED FOLLOWING) Last_department
+FROM departments;
 
 -- Create a common table expression to retrieve the customer_id, 
 -- ship_mode, and how many times the customer has purchased from the mall
@@ -268,10 +310,34 @@ FROM sales
 GROUP BY sub_category;
 
 -- 9.4: Use the GROUPING SETS clause
+SELECT
+  ship_mode,category,sub_category,
+  SUM(quantity) AS total_quantity
+FROM sales
+GROUP BY GROUPING SETS (
+  (ship_mode),(category),(sub_category)
+)
+ORDER BY ship_mode, category, sub_category;
 
 
 --9.5: Use the ROLLUP clause
+SELECT
+  category,sub_category,
+  SUM(quantity) AS total_quantity
+FROM sales
+GROUP BY ROLLUP (category, sub_category)
+ORDER BY category, sub_category;
+
+
 
 
 --9.6: Use the CUBE clause
+
+SELECT
+  ship_mode,category,
+  SUM(quantity) AS total_quantity
+FROM sales
+GROUP BY CUBE (ship_mode, category)
+ORDER BY ship_mode, category;
+
 
